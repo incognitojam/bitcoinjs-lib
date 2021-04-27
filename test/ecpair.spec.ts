@@ -1,12 +1,15 @@
 import * as assert from 'assert';
 import { beforeEach, describe, it } from 'mocha';
 import * as proxyquire from 'proxyquire';
-import { ECPair, ECPairInterface, networks as NETWORKS } from '..';
+import { ECPair, ECPairInterface, networks } from '..';
 import * as fixtures from './fixtures/ecpair.json';
 const hoodwink = require('hoodwink');
 const tinysecp = require('tiny-secp256k1');
 
-const NETWORKS_LIST = Object.values(NETWORKS);
+const NETWORKS_LIST = [
+  ...Object.values(networks.bitcoin),
+  ...Object.values(networks.dogecoin),
+];
 const ZERO = Buffer.alloc(32, 0);
 const ONE = Buffer.from(
   '0000000000000000000000000000000000000000000000000000000000000001',
@@ -65,10 +68,10 @@ describe('ECPair', () => {
     it('supports the network option', () => {
       const keyPair = ECPair.fromPrivateKey(ONE, {
         compressed: false,
-        network: NETWORKS.testnet,
+        network: networks.bitcoin.testnet,
       });
 
-      assert.strictEqual(keyPair.network, NETWORKS.testnet);
+      assert.strictEqual(keyPair.network, networks.bitcoin.testnet);
     });
 
     fixtures.valid.forEach(f => {

@@ -1,5 +1,4 @@
-import { Network } from './networks';
-import * as NETWORKS from './networks';
+import { bitcoin, Network } from './networks';
 import * as types from './types';
 const ecc = require('tiny-secp256k1');
 const randomBytes = require('randombytes');
@@ -56,7 +55,7 @@ class ECPair implements ECPairInterface {
     if (options === undefined) options = {};
     this.compressed =
       options.compressed === undefined ? true : options.compressed;
-    this.network = options.network || NETWORKS.bitcoin;
+    this.network = options.network || bitcoin.mainnet;
 
     if (__Q !== undefined) this.__Q = ecc.pointCompress(__Q, this.compressed);
   }
@@ -132,7 +131,7 @@ function fromWIF(wifString: string, network?: Network | Network[]): ECPair {
 
     // otherwise, assume a network object (or default to bitcoin)
   } else {
-    network = network || NETWORKS.bitcoin;
+    network = network || bitcoin.mainnet;
 
     if (version !== (network as Network).wif)
       throw new Error('Invalid network version');
